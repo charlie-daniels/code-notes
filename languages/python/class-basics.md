@@ -30,6 +30,8 @@ def __init__(self, foo, bar):
 
 ## Methods
 
+### Standard
+
 These are declared in the same way as outside of a class, but must always pass `self` as the first parameter to give context.
 
 ```python
@@ -42,6 +44,58 @@ These can be called either via the class, or in reference to an instance.
 MyClass.foo(my_instance) # Via the class
 
 my_instance.foo() # Via the instance
+```
+
+### Class
+
+These are used to apply methods to the base class instead of instances of the object. Declare them with a decorator (ampersat operator).
+
+```python
+class Foo:
+    @classmethod
+    def class_method_foo(cls):
+        ...
+```
+
+This method accepts a class as the first parameter instead of an instance like in standard function declarations inside a class with `this`. The conventional name for the class parameter is `cls`.
+
+However, calling this method does not require a class to be passed as it will not be called by an instance:
+
+```python
+Foo.class_method_foo()
+```
+
+Class methods are conventionally name `from_` followed by the purpose of the class, such as `from_string`.
+
+They are also often used to aid polymorphism for if an alternate constructor is intended for the subclass.
+
+```python
+class Shape(object):
+    @classmethod
+    def from_square(cls, square):
+        return cls()
+
+class Circle(Shape):
+    # Radius declared here
+    # This overwrites the original from_square method
+    @classmethod
+    def from_square(cls, square):
+        return cls(radius = square.length / 2)
+```
+
+### Static
+
+These do not automatically pass on an attribute such as `self` or a `class`. They should not reference the instance or the class, but should have a logical connection to the purpose of it.
+
+The declaration is similar with the ampersat decorator:
+
+```python
+@staticmethod
+def Foo(bar):
+    if bar == True:
+        return False
+    return True
+# Note the complete disconnectivity to the class
 ```
 
 ## Class Variables
@@ -109,5 +163,3 @@ def __init__(self, foo, bar, new_var):
 Call `isinstance` to check if an object is an instance of a class.
 
 Call `issubclass` to check for a subclass of a superclass.
-
-
